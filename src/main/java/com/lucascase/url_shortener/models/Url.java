@@ -19,7 +19,7 @@ public class Url {
     public static final String TABLE_NAME = "urls";
 
     @Id
-    @Column(name = "id", unique = true)
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -29,7 +29,6 @@ public class Url {
     private String originalUrl;
 
     @Column(name = "short_code", unique = true, nullable = false)
-    @NotBlank
     private String shortCode;
 
     @Column(name = "created_at", updatable = false)
