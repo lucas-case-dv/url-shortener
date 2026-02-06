@@ -14,7 +14,14 @@ public class UrlService {
     private UrlRepository urlRepository;
 
     public Url findById(Long id) {
-        Url url = this.urlRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("URL not found."));
+        Url url = this.urlRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("URL not found."));
+        return url;
+    }
+
+    public Url findByShortCode(String shortCode) {
+        Url url = this.urlRepository.findByShortCode(shortCode)
+                .orElseThrow(() -> new ObjectNotFoundException("URL not found."));
         return url;
     }
 
@@ -34,6 +41,7 @@ public class UrlService {
     @Transactional
     public Url create(Url obj) {
         obj.setId(null);
+        obj.setShortCode("temp");
         Url url = this.urlRepository.save(obj);
 
         String shortCode = encode(url.getId());
