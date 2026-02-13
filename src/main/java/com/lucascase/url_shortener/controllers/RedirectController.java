@@ -1,7 +1,9 @@
 package com.lucascase.url_shortener.controllers;
 
 import com.lucascase.url_shortener.models.Url;
+import com.lucascase.url_shortener.services.ClickService;
 import com.lucascase.url_shortener.services.UrlService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +23,15 @@ public class RedirectController {
     @Autowired
     private UrlService urlService;
 
+    @Autowired
+    private ClickService clickService;
+
     @GetMapping("{shortCode}")
-    public ResponseEntity<Void> redirect(@PathVariable String shortCode) {
+    public ResponseEntity<Void> redirect(@PathVariable String shortCode, HttpServletRequest request) {
         Url url = urlService.findByShortCode(shortCode);
+        String userAgent = request.getHeader("User-Agent");
+        String referer =  request.getHeader("Referer");
+        clickService.createClick(url, userAgent, referer);
         return ResponseEntity.status(HttpStatus.FOUND)
                 .location(URI.create(url.getOriginalUrl()))
                 .build();

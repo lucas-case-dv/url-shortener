@@ -13,6 +13,9 @@ public class UrlService {
     @Autowired
     private UrlRepository urlRepository;
 
+    @Autowired
+    private ClickService clickService;
+
     public Url findById(Long id) {
         Url url = this.urlRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("URL not found."));
@@ -42,10 +45,12 @@ public class UrlService {
     public Url create(Url obj) {
         obj.setId(null);
         obj.setShortCode("temp");
+        obj.setClicks(0);
         Url url = this.urlRepository.save(obj);
 
         String shortCode = encode(url.getId());
         url.setShortCode(shortCode);
+
         return this.urlRepository.save(url);
     }
 }

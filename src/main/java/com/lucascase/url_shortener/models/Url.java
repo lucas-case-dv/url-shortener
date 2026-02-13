@@ -33,4 +33,7 @@ public class Url {
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt =  LocalDateTime.now();
+
+    @Column(name = "clicks", nullable = false)
+    private Integer clicks;
 }
