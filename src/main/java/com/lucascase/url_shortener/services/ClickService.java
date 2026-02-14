@@ -2,6 +2,7 @@ package com.lucascase.url_shortener.services;
 
 import com.lucascase.url_shortener.models.Click;
 import com.lucascase.url_shortener.models.Url;
+import com.lucascase.url_shortener.models.dto.ClickDTO;
 import com.lucascase.url_shortener.repositories.ClickRepository;
 import com.lucascase.url_shortener.repositories.UrlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,15 @@ public class ClickService {
         this.clickRepository.save(click);
     }
 
-    public List<Click> getStats(String code) {
-        return clickRepository.findByUrl_ShortCode(code);
+    public List<ClickDTO> getStats(String code) {
+        List<Click> clicks = clickRepository.findByUrl_ShortCode(code);
+
+        return clicks.stream()
+                .map(click -> new ClickDTO(
+                        click.getTimestamp(),
+                        click.getUserAgent(),
+                        click.getReferer()
+                ))
+                .toList();
     }
 }

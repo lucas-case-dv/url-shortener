@@ -1,7 +1,7 @@
 package com.lucascase.url_shortener.controllers;
 
-import com.lucascase.url_shortener.models.Click;
 import com.lucascase.url_shortener.models.Url;
+import com.lucascase.url_shortener.models.dto.ClickDTO;
 import com.lucascase.url_shortener.services.ClickService;
 import com.lucascase.url_shortener.services.UrlService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,8 +40,8 @@ public class RedirectController {
     }
 
     @GetMapping("{shortCode}/stats")
-    public ResponseEntity<List<Click>> getStats(@PathVariable String shortCode) {
-        List<Click> stats = clickService.getStats(shortCode);
+    public ResponseEntity<List<ClickDTO>> getStats(@PathVariable String shortCode) {
+        List<ClickDTO> stats = clickService.getStats(shortCode);
 
         if (stats.isEmpty()) {
             return ResponseEntity.noContent().build();
