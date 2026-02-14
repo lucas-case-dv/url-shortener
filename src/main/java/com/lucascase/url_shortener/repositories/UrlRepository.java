@@ -20,5 +20,4 @@ public interface UrlRepository extends JpaRepository<Url, Long> {
     @Transactional
     @Query("UPDATE Url u SET u.clicks = u.clicks + 1 WHERE u.id = :id")
     void incrementClicksCount(@Param("id") Long id);
-
 }

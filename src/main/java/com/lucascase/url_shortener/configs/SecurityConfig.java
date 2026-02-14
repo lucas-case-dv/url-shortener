@@ -22,6 +22,8 @@ public class SecurityConfig {
 
     private static final String[] PUBLIC_MATCHERS = {
             "/",
+            "/{shortCode}",
+            "/{shortCode}/stats",
             "/**/*.html",
             "/styles/**",
             "/scripts/**",

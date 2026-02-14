@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class ClickService {
@@ -31,5 +32,9 @@ public class ClickService {
 
         urlRepository.incrementClicksCount(url.getId());
         this.clickRepository.save(click);
+    }
+
+    public List<Click> getStats(String code) {
+        return clickRepository.findByUrl_ShortCode(code);
     }
 }

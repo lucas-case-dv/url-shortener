@@ -1,5 +1,6 @@
 package com.lucascase.url_shortener.controllers;
 
+import com.lucascase.url_shortener.models.Click;
 import com.lucascase.url_shortener.models.Url;
 import com.lucascase.url_shortener.services.ClickService;
 import com.lucascase.url_shortener.services.UrlService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/")
@@ -35,5 +37,16 @@ public class RedirectController {
         return ResponseEntity.status(HttpStatus.FOUND)
                 .location(URI.create(url.getOriginalUrl()))
                 .build();
+    }
+
+    @GetMapping("{shortCode}/stats")
+    public ResponseEntity<List<Click>> getStats(@PathVariable String shortCode) {
+        List<Click> stats = clickService.getStats(shortCode);
+
+        if (stats.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(stats);
     }
 }
