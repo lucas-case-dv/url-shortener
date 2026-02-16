@@ -50,8 +50,14 @@ services:
     tty: true
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.app.rule=Host(`url.localhost`)"
-      - "traefik.http.services.app.loadbalancer.server.port=8080"
+      - "traefik.http.routers.api-data.rule=Host(`url.localhost`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.api-data.priority=100"
+      - "traefik.http.routers.stats-view.rule=Host(`url.localhost`) && PathRegexp(`^/[a-zA-Z0-9_-]+/stats$|/stats`)"
+      - "traefik.http.routers.stats-view.priority=80"
+      - "traefik.http.middlewares.stats-replace.replacepath.path=/stats.html"
+      - "traefik.http.routers.stats-view.middlewares=stats-replace"
+      - "traefik.http.routers.redirect.rule=Host(`url.localhost`) && PathPrefix(`/`)"
+      - "traefik.http.routers.redirect.priority=50"
 
 volumes:
   pg_data:

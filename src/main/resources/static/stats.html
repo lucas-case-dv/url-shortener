@@ -39,9 +39,9 @@
 <div class="container">
   <h1>Short URL Stats</h1>
   <section class="stats-header">
-    <p>Total Clicks: {{ total_clicks }}</p>
+    <p>Total Clicks: <span id="total-clicks">0</span></p>
   </section>
-  <table>
+  <table id="stats-table">
     <thead>
     <tr>
       <th>Browser</th>
@@ -55,5 +55,46 @@
     </tbody>
   </table>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const shortCode = window.location.pathname.split('/')[1];
+
+        fetch(`/api/${shortCode}/stats`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.status === 204) {
+                    console.warn('No clicks registered.');
+                    return [];
+                }
+                if (!response.ok) throw new Error('Error when fetching data');
+                return response.json();
+            })
+            .then(data => {
+                const counter = document.getElementById('total-clicks');
+                if (counter) counter.innerText = data.length;
+
+                const tableBody = document.querySelector('#stats-table tbody');
+                if (!tableBody) return;
+
+                tableBody.innerHTML = '';
+
+                data.forEach(stat => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                <td>${stat.userBrowser || 'N/A'}</td>
+                <td>${stat.userOS || 'N/A'}</td>
+                <td>${stat.referer || 'Direct'}</td>
+                <td>${stat.clickedAt}</td>
+            `;
+                    tableBody.appendChild(row);
+                });
+            })
+            .catch(error => console.error('Request error:', error));
+    });
+</script>
 </body>
 </html>

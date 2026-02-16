@@ -22,7 +22,7 @@ public class SecurityConfig {
 
     private static final String[] PUBLIC_MATCHERS = {
             "/",
-            "/api/urls/{shortCode}",
+            "/api/**",
             "/{shortCode}",
             "/{shortCode}/stats",
             "/**/*.html",
