@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -24,12 +25,18 @@ public class ClickService {
 
     @Async
     @Transactional
-    public void createClick (Url url, String userAgent, String referer) {
+    public void createClick (Url url, String userBrowser, String userOS, String referer) {
         Click click = new Click();
         click.setUrl(url);
-        click.setUserAgent((userAgent != null && !userAgent.isBlank()) ? userAgent : "Unknown");
+        click.setUserBrowser((userBrowser != null && !userBrowser.isBlank()) ? userBrowser : "Unknown");
+        click.setUserOS((userOS != null && !userOS.isBlank()) ? userOS : "Unknown");
         click.setReferer((referer != null && !referer.isBlank()) ? referer : "Direct");
-        click.setTimestamp(LocalDateTime.now());
+
+        LocalDateTime now = LocalDateTime.now();
+        String pattern = "dd/MM/yyyy HH:mm:ss";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        String customTimestamp = now.format(formatter);
+        click.setTimestamp(customTimestamp);
 
         urlRepository.incrementClicksCount(url.getId());
         this.clickRepository.save(click);
@@ -41,7 +48,8 @@ public class ClickService {
         return clicks.stream()
                 .map(click -> new ClickDTO(
                         click.getTimestamp(),
-                        click.getUserAgent(),
+                        click.getUserBrowser(),
+                        click.getUserOS(),
                         click.getReferer()
                 ))
                 .toList();

@@ -27,10 +27,15 @@ public class Click {
     @JoinColumn(name = "url_id")
     private Url url;
 
-    @Column(name = "user_agent", length = 500, nullable = false)
+    @Column(name = "user_browser", length = 500, nullable = false)
     @Size(min = 2, max = 500)
     @NotBlank
-    private String userAgent;
+    private String userBrowser;
+
+    @Column(name = "user_os", length = 500, nullable = false)
+    @Size(min = 2, max = 500)
+    @NotBlank
+    private String userOS;
 
     @Column(name = "referer", length = 100, nullable = false)
     @Size(min = 2, max = 100)
@@ -38,5 +43,5 @@ public class Click {
     private String referer;
 
     @Column(name = "createdAt", updatable = false)
-    private LocalDateTime timestamp;
+    private String timestamp;
 }

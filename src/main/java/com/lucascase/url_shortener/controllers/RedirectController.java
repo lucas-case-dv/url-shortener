@@ -5,6 +5,8 @@ import com.lucascase.url_shortener.models.dto.ClickDTO;
 import com.lucascase.url_shortener.services.ClickService;
 import com.lucascase.url_shortener.services.UrlService;
 import jakarta.servlet.http.HttpServletRequest;
+import nl.basjes.parse.useragent.UserAgent;
+import nl.basjes.parse.useragent.UserAgentAnalyzer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +34,12 @@ public class RedirectController {
     public ResponseEntity<Void> redirect(@PathVariable String shortCode, HttpServletRequest request) {
         Url url = urlService.findByShortCode(shortCode);
         String userAgent = request.getHeader("User-Agent");
-        String referer =  request.getHeader("Referer");
-        clickService.createClick(url, userAgent, referer);
+        UserAgentAnalyzer uaa = UserAgentAnalyzer.newBuilder().withCache(1000).build();
+        UserAgent agent = uaa.parse(userAgent);
+        String userBrowser = agent.getValue(UserAgent.AGENT_NAME);
+        String userOS = agent.getValue(UserAgent.OPERATING_SYSTEM_NAME_VERSION);
+        String referer = request.getHeader("Referer");
+        clickService.createClick(url, userBrowser, userOS, referer);
         return ResponseEntity.status(HttpStatus.FOUND)
                 .location(URI.create(url.getOriginalUrl()))
                 .build();
