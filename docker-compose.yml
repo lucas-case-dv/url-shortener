@@ -1,0 +1,42 @@
+services:
+  db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - POSTGRES_DB=$POSTGRES_DB
+    volumes:
+      - pg_data:/var/lib/postgresql
+    ports:
+      - $POSTGRES_LOCAL_PORT:$POSTGRES_DOCKER_PORT
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    depends_on:
+      db:
+        condition: service_healthy
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    working_dir: /usr/src/url-shortener
+    container_name: url-shortener
+    restart: on-failure
+    env_file: ./.env
+    ports:
+      - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:$POSTGRES_DOCKER_PORT/$POSTGRES_DB
+      - SPRING_DATASOURCE_USERNAME=$POSTGRES_USER
+      - SPRING_DATASOURCE_PASSWORD=$POSTGRES_PASSWORD
+    volumes:
+      - .m2:/root/.m2
+    stdin_open: true
+    tty: true
+
+volumes:
+  pg_data:
+  maven_cache:
