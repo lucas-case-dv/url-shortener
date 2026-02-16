@@ -24,17 +24,20 @@ import java.util.List;
 @Validated
 public class RedirectController {
 
+    private final UserAgentAnalyzer uaa = UserAgentAnalyzer.newBuilder()
+            .withCache(1000)
+            .build();
+
     @Autowired
     private UrlService urlService;
 
     @Autowired
     private ClickService clickService;
 
-    @GetMapping("{shortCode}")
+    @GetMapping("/{shortCode:[a-zA-Z0-9_-]{1,50}}") //Ignores blank code
     public ResponseEntity<Void> redirect(@PathVariable String shortCode, HttpServletRequest request) {
         Url url = urlService.findByShortCode(shortCode);
         String userAgent = request.getHeader("User-Agent");
-        UserAgentAnalyzer uaa = UserAgentAnalyzer.newBuilder().withCache(1000).build();
         UserAgent agent = uaa.parse(userAgent);
         String userBrowser = agent.getValue(UserAgent.AGENT_NAME);
         String userOS = agent.getValue(UserAgent.OPERATING_SYSTEM_NAME_VERSION);
@@ -45,7 +48,7 @@ public class RedirectController {
                 .build();
     }
 
-    @GetMapping("{shortCode}/stats")
+    @GetMapping("/api/{shortCode}/stats")
     public ResponseEntity<List<ClickDTO>> getStats(@PathVariable String shortCode) {
         List<ClickDTO> stats = clickService.getStats(shortCode);
 
