@@ -1,4 +1,16 @@
 services:
+  traefik:
+    image: traefik:v3.6.6
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+      - "8081:8081"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
   db:
     image: postgres:latest
     environment:
@@ -36,6 +48,10 @@ services:
       - .m2:/root/.m2
     stdin_open: true
     tty: true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.app.rule=Host(`url.localhost`)"
+      - "traefik.http.services.app.loadbalancer.server.port=8080"
 
 volumes:
   pg_data:
