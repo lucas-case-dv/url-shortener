@@ -1,0 +1,59 @@
+<!-- stats.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Short URL Stats</title>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 20px;
+          background-color: #f4f4f9;
+      }
+      .container {
+          max-width: 800px;
+          margin: auto;
+          overflow-x: hidden;
+      }
+      table {
+          width: 100%;
+          border-collapse: collapse;
+      }
+      th, td {
+          padding: 12px;
+          text-align: left;
+          border-bottom: 1px solid #ddd;
+      }
+      th {
+          background-color: #f2f2f2;
+          font-weight: bold;
+      }
+
+      .stats-header {
+          margin-bottom: 20px;
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Short URL Stats</h1>
+  <section class="stats-header">
+    <p>Total Clicks: {{ total_clicks }}</p>
+  </section>
+  <table>
+    <thead>
+    <tr>
+      <th>Browser</th>
+      <th>OS</th>
+      <th>Referer</th>
+      <th>Timestamp</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+  </table>
+</div>
+</body>
+</html>
