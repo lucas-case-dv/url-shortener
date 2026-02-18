@@ -12,7 +12,8 @@ This project was developed for learning purposes, focusing on REST APIs and netw
 - Traefik for Reverse Proxy
 - Stats page with relevant metrics for each shortened URL
 
-<img width="919" height="618" alt="image" src="https://github.com/user-attachments/assets/ffea4b3c-6ce4-4e34-98e1-26c39f452a03" />
+<img width="919" height="533" alt="image" src="https://github.com/user-attachments/assets/1b383f11-3cee-4dea-a9a4-7ec581d9f85f" />
+
 <img width="919" height="341" alt="image" src="https://github.com/user-attachments/assets/29210d0d-a21a-48ee-a1ea-d4e38aa47d08" />
 
 ---
