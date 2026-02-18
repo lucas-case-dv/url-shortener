@@ -63,11 +63,15 @@ This project was developed for learning purposes, focusing on REST APIs and netw
 ---
 
 ## Main Routes
+
+### Pages
 - Home: ``http://url.localhost/``
 - Redirect: ``http://url.localhost/{code}``
 - Stats: ``http://url.localhost/{code}/stats``
+
+### Endpoints
 - POST URL: ``/api/urls``
-- GET URL: ``/api/urls/{code}``
+- GET/PUT/DELETE URL: ``/api/urls/{code}``
 - GET Stats: ``/api/{code}/stats``
 
 ---
