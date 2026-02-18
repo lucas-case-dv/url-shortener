@@ -8,7 +8,7 @@ This project was developed for learning purposes, focusing on REST APIs and netw
 
 ## Features
 
-- URL conversion to shortened version
+- URL conversion to shortened version using Base62
 - Traefik for Reverse Proxy
 - Stats page with relevant metrics for each shortened URL
 
