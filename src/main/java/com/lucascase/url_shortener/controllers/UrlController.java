@@ -19,17 +19,29 @@ public class UrlController {
     @Autowired
     private UrlService urlService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Url> findById(@PathVariable Long id) {
-        return ResponseEntity.ok(this.urlService.findById(id));
+    @GetMapping("/{shortCode}")
+    public ResponseEntity<Url> findByShortCode(@PathVariable String shortCode) {
+        return ResponseEntity.ok(this.urlService.findByShortCode(shortCode));
     }
 
     @PostMapping
     public ResponseEntity<Url> create(@Valid @RequestBody Url url) {
         Url newUrl = this.urlService.create(url);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}").buildAndExpand(newUrl.getId()).toUri();
+                .path("/{shortCode}").buildAndExpand(newUrl.getShortCode()).toUri();
         return ResponseEntity.created(uri).body(newUrl);
+    }
+
+    @PutMapping("/{shortCode}")
+    public ResponseEntity<Url> update(@PathVariable String shortCode, @Valid @RequestBody Url newUrl) {
+        Url updatedUrl = this.urlService.update(shortCode, newUrl);
+        return ResponseEntity.ok(updatedUrl);
+    }
+
+    @DeleteMapping("/{shortCode}")
+    public ResponseEntity<Void> delete(@PathVariable String shortCode) {
+        this.urlService.delete(shortCode);
+        return ResponseEntity.noContent().build();
     }
 
 }

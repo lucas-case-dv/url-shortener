@@ -1,11 +1,14 @@
 package com.lucascase.url_shortener.services;
 
 import com.lucascase.url_shortener.models.Url;
+import com.lucascase.url_shortener.repositories.ClickRepository;
 import com.lucascase.url_shortener.repositories.UrlRepository;
 import com.lucascase.url_shortener.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 public class UrlService {
@@ -14,7 +17,7 @@ public class UrlService {
     private UrlRepository urlRepository;
 
     @Autowired
-    private ClickService clickService;
+    private ClickRepository clickRepository;
 
     public Url findById(Long id) {
         Url url = this.urlRepository.findById(id)
@@ -52,5 +55,19 @@ public class UrlService {
         url.setShortCode(shortCode);
 
         return this.urlRepository.save(url);
+    }
+
+    @Transactional
+    public Url update(String shortCode, Url newUrl) {
+        Url url = findByShortCode(shortCode);
+        url.setOriginalUrl(newUrl.getOriginalUrl());
+        return urlRepository.save(url);
+    }
+
+    @Transactional
+    public void delete(String shortCode) {
+        Url url = findByShortCode(shortCode);
+        this.clickRepository.deleteByUrl_ShortCode(shortCode);
+        this.urlRepository.delete(url);
     }
 }
