@@ -1,6 +1,7 @@
 package com.lucascase.url_shortener.controllers;
 
 import com.lucascase.url_shortener.models.Url;
+import com.lucascase.url_shortener.models.dto.UrlDTO;
 import com.lucascase.url_shortener.services.UrlService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class UrlController {
     }
 
     @PostMapping
-    public ResponseEntity<Url> create(@Valid @RequestBody Url url) {
+    public ResponseEntity<Url> create(@Valid @RequestBody UrlDTO url) {
         Url newUrl = this.urlService.create(url);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{shortCode}").buildAndExpand(newUrl.getShortCode()).toUri();
@@ -33,7 +34,7 @@ public class UrlController {
     }
 
     @PutMapping("/{shortCode}")
-    public ResponseEntity<Url> update(@PathVariable String shortCode, @Valid @RequestBody Url newUrl) {
+    public ResponseEntity<Url> update(@PathVariable String shortCode, @Valid @RequestBody UrlDTO newUrl) {
         Url updatedUrl = this.urlService.update(shortCode, newUrl);
         return ResponseEntity.ok(updatedUrl);
     }

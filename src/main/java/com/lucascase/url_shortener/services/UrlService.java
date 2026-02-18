@@ -1,6 +1,7 @@
 package com.lucascase.url_shortener.services;
 
 import com.lucascase.url_shortener.models.Url;
+import com.lucascase.url_shortener.models.dto.UrlDTO;
 import com.lucascase.url_shortener.repositories.ClickRepository;
 import com.lucascase.url_shortener.repositories.UrlRepository;
 import com.lucascase.url_shortener.services.exceptions.ObjectNotFoundException;
@@ -45,11 +46,13 @@ public class UrlService {
     }
 
     @Transactional
-    public Url create(Url obj) {
-        obj.setId(null);
-        obj.setShortCode("temp");
-        obj.setClicks(0);
-        Url url = this.urlRepository.save(obj);
+    public Url create(UrlDTO obj) {
+        Url url = new Url();
+        url.setId(null);
+        url.setShortCode("temp");
+        url.setClicks(0);
+        url.setOriginalUrl(obj.originalUrl());
+        url = this.urlRepository.save(url);
 
         String shortCode = encode(url.getId());
         url.setShortCode(shortCode);
@@ -58,9 +61,9 @@ public class UrlService {
     }
 
     @Transactional
-    public Url update(String shortCode, Url newUrl) {
+    public Url update(String shortCode, UrlDTO newUrl) {
         Url url = findByShortCode(shortCode);
-        url.setOriginalUrl(newUrl.getOriginalUrl());
+        url.setOriginalUrl(newUrl.originalUrl());
         return urlRepository.save(url);
     }
 
